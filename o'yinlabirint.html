@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labirint O'yini</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e6ff04;
+        }
+        #gameCanvas {
+            border: 5px solid rgb(248, 5, 5);
+            background-color: #000000;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="gameCanvas" width="500" height="500"></canvas>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const maze = [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ];
+
+    const tileSize = 50;
+    let playerX = 1, playerY = 1;
+
+    function drawMaze() {
+        for (let y = 0; y < maze.length; y++) {
+            for (let x = 0; x < maze[y].length; x++) {
+                if (maze[y][x] === 1) {
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+                } else {
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+    }
+
+    function drawPlayer() {
+        ctx.fillStyle = 'red';
+        ctx.beginPath();
+        ctx.arc(playerX * tileSize + tileSize / 2, playerY * tileSize + tileSize / 2, tileSize / 4, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    function updateGame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawMaze();
+        drawPlayer();
+    }
+
+    function movePlayer(dx, dy) {
+        if (maze[playerY + dy][playerX + dx] === 0) {
+            playerX += dx;
+            playerY += dy;
+        }
+        updateGame();
+
+        // O'yinchini chiqish joyiga yetkazish
+        if (playerX === 8 && playerY === 8) {
+            setTimeout(() => alert("Tabriklaymiz! Labirintdan chiqdingiz!"), 100);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        switch (e.key) {
+            case 'ArrowUp':
+                movePlayer(0, -1);
+                break;
+            case 'ArrowDown':
+                movePlayer(0, 1);
+                break;
+            case 'ArrowLeft':
+                movePlayer(-1, 0);
+                break;
+            case 'ArrowRight':
+                movePlayer(1, 0);
+                break;
+        }
+    });
+
+    updateGame();
+</script>
+
+</body>
+</html>
